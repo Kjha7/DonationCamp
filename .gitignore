@@ -403,3 +403,12 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+.updatebot-repos
+
+**/terraform.tfvars
+
+.terraform/
+*.tfplan
+
+.helm/
