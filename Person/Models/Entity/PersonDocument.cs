@@ -11,7 +11,16 @@ namespace DefaultNamespace
             emailId = personCreateRequest.emailId;
             gender = personCreateRequest.gender;
         }
-        
+
+        public PersonDocument(PersonUpdateRequest personupdateRequest)
+        {
+            id = personupdateRequest.id;
+            firstName = personupdateRequest.firstName;
+            lastName = personupdateRequest.lastName;
+            emailId = personupdateRequest.emailId;
+            gender = personupdateRequest.gender;
+        }
+
         [BsonId]
         private Guid id { get; set; }
         private string firstName { get; set; }
