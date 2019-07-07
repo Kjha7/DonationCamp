@@ -3,6 +3,8 @@ namespace DefaultNamespace
     public class PersonServices :IPersonService
     {
         private readonly IMongoCollection<PersonDocument> _person;
+
+        public PersonServices() { }
         
         public PersonServices(PersonDocument personDocument)
         {
@@ -52,8 +54,9 @@ namespace DefaultNamespace
 
         public Person UpdatePerson(Guid personId, PersonUpdateRequest personUpdateRequest)
         {
-            var personDocument = _person.FindOneAndUpdateAsync(p => p.id == personId, PersonDocument).Result;
-            var updateAt = DateTime.UtcNow;
+            var personDocument = _person.FindOneAndUpdateAsync(p => p.id == personId).Result;
+            var updatedAt = DateTime.UtcNow;
+            return new Person(personDocument.updatePerson(personUpdateRequest, updatedAt));
 
         }
     }

@@ -12,13 +12,14 @@ namespace DefaultNamespace
             gender = personCreateRequest.gender;
         }
 
-        public PersonDocument(PersonUpdateRequest personupdateRequest)
+        public PersonDocument updatePerson(PersonUpdateRequest personUpdateRequest, DateTime updatedAt)
         {
-            id = personupdateRequest.id;
-            firstName = personupdateRequest.firstName;
-            lastName = personupdateRequest.lastName;
-            emailId = personupdateRequest.emailId;
-            gender = personupdateRequest.gender;
+            firstName = personUpdateRequest.firstName;
+            lastName = personUpdateRequest.lastName;
+            emailId = personUpdateRequest.emailId;
+            gender = personUpdateRequest.gender;
+            updatedAt = updatedAt;
+            return this;
         }
 
         [BsonId]
