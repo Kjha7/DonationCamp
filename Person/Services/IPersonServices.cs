@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using MongoDB.Driver;
-using Person.Models.Requests;
+using Person.Models.Request;
 
-
-namespace DefaultNamespace
+namespace Person.Models
 {
     public interface IPersonService
     {

@@ -10,7 +10,7 @@ namespace Person.Models.Request
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string emailId { get; set; }
-        public Gender gender { get; set; }
+        public Person.Gender gender { get; set; }
         public DateTime updatedAt { get; set; }
     }
 }
