@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Person.Configs;
-using Person.Models.Request;
+using PersonDocument.Configs;
+using PersonDocument.Models.Request;
 
 
-namespace Person.Models
+namespace PersonDocument.Models
 {
     public class PersonServices :IPersonService
     {

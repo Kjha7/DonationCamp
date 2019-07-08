@@ -8,6 +8,20 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configs\" />
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
+    <Folder Include="Models\Entity\" />
+    <Folder Include="Models\Request\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Person\Person.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\Entity\Donar.cs" />
+  </ItemGroup>
 </Project>

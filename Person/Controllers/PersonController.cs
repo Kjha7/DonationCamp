@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Person.Models;
-using Person.Models.Request;
+using PersonDocument.Models;
+using PersonDocument.Models.Request;
 
-namespace Person.Controllers
+namespace PersonDocument.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
