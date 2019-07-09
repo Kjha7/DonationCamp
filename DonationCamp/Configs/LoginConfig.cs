@@ -1,9 +1,7 @@
 ﻿using System;
-using Donation.Models.Request;
-
 namespace Donation.Configs
 {
-    public class MongoDbConfig
+    public class LoginConfig
     {
         public string Uri { get; set; }
         public string Database { get; set; }

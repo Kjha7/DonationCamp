@@ -1,7 +1,7 @@
 ﻿using System;
-namespace Donation.Models.Request
+namespace PersonDocument.Models.Request
 {
-    public class LoginRequest
+    public class CredentialsCreateRequest
     {
         public string emailId { get; set; }
         public string password { get; set; }

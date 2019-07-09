@@ -1,9 +1,9 @@
 ﻿using System;
 using PersonDocument;
-using DonationCamp.Models.Request;
+using Donation.Models.Request;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace DonationCamp.Models.Entity
+namespace Donation.Models.Entity
 {
     public class DonationCamp
     {
@@ -12,13 +12,16 @@ namespace DonationCamp.Models.Entity
             Id = Guid.NewGuid();
             Donar = donationCreateRequest.Donar;
             Category = donationCreateRequest.Category;
+            dateTime = donationCreateRequest.dateTime;
         }
 
         [BsonId]
         public Guid Id { get; set; }
         public PersonDocument.Models.Person Donar { get; set; }
         public Types Category { get; set; }
+        public DateTime dateTime { get; set; }
     }
+
 
     public enum Types
     {

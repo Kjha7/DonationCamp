@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
 
 namespace PersonDocument.Models
 {
@@ -34,13 +35,17 @@ namespace PersonDocument.Models
 
         [BsonId]
         public Guid id { get; set; }
-        private string firstName { get; set; }
-        private string password { get; set; }
-        private DateTime graduationDate { get; set; }
-        private string emailId { get; set; }
-        private Gender gender { get; set; }
-        private DateTime updatedAt { get; set; }
-        private DateTime createdAt { get; set; }
+        public string firstName { get; set; }
+        [Required(ErrorMessage ="Fill Password")]
+        [DataType(DataType.Password)]
+        public string password { get; set; }
+        public DateTime graduationDate { get; set; }
+        [Required(ErrorMessage = "Fill EmailID")]
+        [EmailAddress]
+        public string emailId { get; set; }
+        public Gender gender { get; set; }
+        public DateTime updatedAt { get; set; }
+        public DateTime createdAt { get; set; }
         
         public enum Gender
         {

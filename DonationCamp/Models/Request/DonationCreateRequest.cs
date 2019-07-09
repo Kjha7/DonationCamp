@@ -1,11 +1,11 @@
 ﻿using System;
-using DonationCamp.Models.Entity;
+using Donation.Models.Entity;
 
-namespace DonationCamp.Models.Request
+namespace Donation.Models.Request
 {
     public class DonationCreateRequest
     {
-        public PersonDocument.Models.Person Donar { get; set; }
         public Types Category { get; set; }
+        public DateTime dateTime { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace PersonDocument.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<Models.Person> Get(Guid id)
+        public ActionResult<Person> Get(Guid id)
         {
             var person = personServices.GetPerson(id);
             if (person == null) return NotFound();
@@ -30,14 +30,14 @@ namespace PersonDocument.Controllers
 
         // POST api/values
         [HttpPost]
-        public ActionResult<Models.Person> Post([FromBody] PersonCreateRequest personCreateRequest)
+        public ActionResult<Person> Post([FromBody] PersonCreateRequest personCreateRequest)
         {
             return personServices.CreatePerson(personCreateRequest);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public ActionResult<Models.Person> Put(Guid id, [FromBody] PersonUpdateRequest personUpdateRequest)
+        public ActionResult<Person> Put(Guid id, [FromBody] PersonUpdateRequest personUpdateRequest)
         {
             return personServices.UpdatePerson(id, personUpdateRequest);
         }

@@ -27,9 +27,8 @@ namespace PersonDocument
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<MongoDbConfig>(options => Configuration.GetSection("MONGO").Bind(options));
-
-            services.AddSingleton<PersonServices>();
+            services.Configure<MongoDbConfig>(Configuration.GetSection(nameof(MongoDbConfig)));
+            services.Configure<LoginConfig>(Configuration.GetSection(nameof(LoginConfig)));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

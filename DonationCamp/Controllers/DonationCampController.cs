@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DonationCamp.Controllers
+namespace Donation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -26,8 +26,15 @@ namespace DonationCamp.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] DonationCreateRequest donationCreateRequest)
         {
+            
+        }
+
+        public void Login()
+        {
+
+
         }
 
         // PUT api/values/5

@@ -1,8 +1,10 @@
 ﻿using System;
-namespace Donation.Models.Request
+namespace Donation.Models.Entity
 {
-    public class LoginRequest
+    public class Credentials
     {
+        public Credentials() { }
+
         public string emailId { get; set; }
         public string password { get; set; }
     }
