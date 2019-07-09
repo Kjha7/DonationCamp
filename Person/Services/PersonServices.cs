@@ -4,22 +4,18 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using PersonDocument.Configs;
+using PersonDocument.Models;
 using PersonDocument.Models.Entity;
 using PersonDocument.Models.Request;
 
 
-namespace PersonDocument.Models
+namespace PersonDocument.Services
 {
     public class PersonServices :IPersonService
     {
         private MongoDbConfig _config;
 
-        private LoginConfig _loginconfig;
-
         private IMongoCollection<Person> _person;
-        private IMongoCollection<Credentials> _credentials;
-
-        public PersonServices() { }
 
         public PersonServices(IOptions<MongoDbConfig> settings)
         {
@@ -30,14 +26,7 @@ namespace PersonDocument.Models
             _person = database.GetCollection<Person>(_config.Collection);
         }
 
-        public PersonServices(IOptions<LoginConfig> settings)
-        {
-            _loginconfig = settings.Value;
-            var client = new MongoClient(_loginconfig.Uri);
-            var database = client.GetDatabase(_loginconfig.Database);
-
-            _credentials = database.GetCollection<Credentials>(_loginconfig.Collection);
-        }
+        
 
         public List<Person> GetAllPersons()
         {
@@ -48,7 +37,7 @@ namespace PersonDocument.Models
         {
             try
             {
-                var person = _person.Find(p => p.id == personId).SingleAsync().Result;
+                var person = _person.Find(p => p.PersonId == personId).SingleAsync().Result;
                 return person;
             }
             catch (Exception)
@@ -75,9 +64,6 @@ namespace PersonDocument.Models
             _person.InsertOneAsync(personDocument).Wait();
 
             var credentials = new Credentials();
-            credentials.password = personCreateRequest.password;
-            credentials.emailId = personCreateRequest.emailId;
-            _credentials.InsertOneAsync(credentials).Wait();
 
             return personDocument;
         }
@@ -85,7 +71,7 @@ namespace PersonDocument.Models
         public Person UpdatePerson(Guid personId, PersonUpdateRequest personUpdateRequest)
         {
             DateTime updatedAt = DateTime.UtcNow;
-            return _person.FindOneAndUpdateAsync(p => p.id == personId,
+            return _person.FindOneAndUpdateAsync(p => p.PersonId == personId,
                  Person.UpdateBuilder(personUpdateRequest, updatedAt)).Result;
             
 

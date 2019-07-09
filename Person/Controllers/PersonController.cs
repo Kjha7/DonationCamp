@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PersonDocument.Models;
+using PersonDocument.Models.Entity;
 using PersonDocument.Models.Request;
+using PersonDocument.Services;
 
 namespace PersonDocument.Controllers
 {
@@ -11,16 +13,25 @@ namespace PersonDocument.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        IPersonService personServices;
-        // GET api/values
+
+        private IPersonService personServices;
+        private CredentialService credentialService;
+        public PersonController(PersonServices _personService, CredentialService _credentialService)
+        {
+            personServices = _personService;
+            credentialService = _credentialService;
+        }
+
+
+        // GET api/person
         [HttpGet]
-        public ActionResult<IEnumerable<Models.Person>> Get()
+        public ActionResult<IEnumerable<Person>> Get()
         {
             return personServices.GetAllPersons();
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
+        // GET api/person/5
+        [HttpGet("{PersonId}")]
         public ActionResult<Person> Get(Guid id)
         {
             var person = personServices.GetPerson(id);
@@ -28,25 +39,29 @@ namespace PersonDocument.Controllers
             return person;
         }
 
-        // POST api/values
+        // POST api/person
         [HttpPost]
         public ActionResult<Person> Post([FromBody] PersonCreateRequest personCreateRequest)
         {
-            return personServices.CreatePerson(personCreateRequest);
+            var person = personServices.CreatePerson(personCreateRequest);
+            var credentialCreateRequest = new CredentialsCreateRequest(person);
+            credentialService.CreateCredentials(credentialCreateRequest);
+            return person;
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
+        // PUT api/person/5
+        [HttpPut("{PersonId}")]
         public ActionResult<Person> Put(Guid id, [FromBody] PersonUpdateRequest personUpdateRequest)
         {
             return personServices.UpdatePerson(id, personUpdateRequest);
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
+        // DELETE api/person/5
+        [HttpDelete("{PersonId}")]
         public void Delete(Guid id)
         {
             personServices.DeletePerson(id);
+            credentialService.DeleteCredentials(id);
         }
     }
 }

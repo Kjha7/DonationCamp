@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using PersonDocument.Models;
 using PersonDocument.Models.Request;
 
-namespace PersonDocument.Models
+namespace PersonDocument.Services
 {
     public interface IPersonService
     {

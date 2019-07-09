@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PersonDocument.Configs;
+using PersonDocument.Services;
 
 namespace PersonDocument
 {
@@ -29,6 +30,8 @@ namespace PersonDocument
         {
             services.Configure<MongoDbConfig>(Configuration.GetSection(nameof(MongoDbConfig)));
             services.Configure<LoginConfig>(Configuration.GetSection(nameof(LoginConfig)));
+            services.AddSingleton<PersonServices>();
+            services.AddSingleton<CredentialService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

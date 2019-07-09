@@ -1,4 +1,5 @@
 ﻿using System;
+using MongoDB.Bson.Serialization.Attributes;
 using PersonDocument.Models.Request;
 
 namespace PersonDocument.Models.Entity
@@ -7,12 +8,15 @@ namespace PersonDocument.Models.Entity
     {
         public Credentials(CredentialsCreateRequest credentialsCreateRequest)
         {
-            emailId = credentialsCreateRequest.emailId;
-            password = credentialsCreateRequest.password;
+            PersonId = credentialsCreateRequest.PersonId;
+            EmailId = credentialsCreateRequest.EmailId;
+            Password = credentialsCreateRequest.Password;
         }
         public Credentials() { }
 
-        public string emailId { get; set; }
-        public string password { get; set; }
+
+        public Guid PersonId { get; set; }
+        public string EmailId { get; set; }
+        public string Password { get; set; }
     }
 }

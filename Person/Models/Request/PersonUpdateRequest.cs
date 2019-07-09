@@ -7,10 +7,10 @@ namespace PersonDocument.Models.Request
 {
     public class PersonUpdateRequest
     {
-        public string firstName { get; set; }
-        public DateTime graduationDate { get; set; }
-        public string emailId { get; set; }
+        public string FirstName { get; set; }
+        public DateTime GraduationDate { get; set; }
+        public string EmailId { get; set; }
         public Person.Gender gender { get; set; }
-        public DateTime updatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }
