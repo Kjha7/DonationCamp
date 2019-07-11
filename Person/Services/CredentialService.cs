@@ -1,6 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using PersonDocument.Configs;
+using PersonDocument.Models.Entity;
+using PersonDocument.Models.Request;
 
 namespace PersonDocument.Services
 {

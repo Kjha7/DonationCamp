@@ -35,7 +35,7 @@ namespace PersonDocument.Services
         {
             try
             {
-                var person = _person.Find(p => p.PersonId == personId).SingleAsync().Result;
+                var person = _person.Find(p => p.PersonId == personId).FirstOrDefault();
                 return person;
             }
             catch (Exception)

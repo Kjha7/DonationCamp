@@ -31,7 +31,7 @@ namespace PersonDocument.Controllers
         }
 
         // GET api/person/5
-        [HttpGet("{PersonId}")]
+        [HttpGet("{id}")]
         public ActionResult<Person> Get(Guid id)
         {
             var person = personServices.GetPerson(id);
@@ -50,14 +50,14 @@ namespace PersonDocument.Controllers
         }
 
         // PUT api/person/5
-        [HttpPut("{PersonId}")]
+        [HttpPut("{id}")]
         public ActionResult<Person> Put(Guid id, [FromBody] PersonUpdateRequest personUpdateRequest)
         {
             return personServices.UpdatePerson(id, personUpdateRequest);
         }
 
         // DELETE api/person/5
-        [HttpDelete("{PersonId}")]
+        [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
             personServices.DeletePerson(id);
