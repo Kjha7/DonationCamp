@@ -26,8 +26,6 @@ namespace PersonDocument.Services
             _person = database.GetCollection<Person>(_config.Collection);
         }
 
-        
-
         public List<Person> GetAllPersons()
         {
             return _person.Find(Person => true).ToList();

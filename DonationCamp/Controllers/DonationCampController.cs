@@ -2,51 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DonationCamp.Services;
+using DonationCamp.Models.Request;
+using Microsoft.AspNetCore.Http;
 
-namespace Donation.Controllers
+namespace DonationCamp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class DonationController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public DonationServices donationServices;
+        public SessionServices sessionServices;
+        public DonationController(DonationServices donation, SessionServices _sessionServices)
         {
-            return new string[] { "value1", "value2" };
+            donationServices = donation;
+            sessionServices = _sessionServices;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
+        // POST account/Login
         [HttpPost]
-        public void Post([FromBody] DonationCreateRequest donationCreateRequest)
+        [Route("account/Login")]
+        public void Login([FromBody]LoginRequest loginRequest)
         {
-            
+            // Require the user to have a confirmed email before they can log on.
+          var personID = sessionServices.Login(loginRequest);
+            if (true)
+            {
+                HttpContext.Session.SetString("personId", personID.ToString());
+                HttpContext.Session.SetString("emailId", loginRequest.emailId);
+            }
         }
 
-        public void Login()
+        [HttpPost]
+        [Route("api/Donate")]
+        public void Donate([FromBody]DonationCreateRequest donationCreateRequest)
         {
-
-
+            if(HttpContext.Session.GetString("personId") != null)
+            {
+                var personId = HttpContext.Session.GetString("personId");
+                donationServices.Donate(donationCreateRequest, personId);
+            }
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

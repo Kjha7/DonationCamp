@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Donation.Configs
+namespace DonationCamp.Configs
 {
     public class LoginConfig
     {

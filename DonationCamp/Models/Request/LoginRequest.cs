@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Donation.Models.Request
+namespace DonationCamp.Models.Request
 {
     public class LoginRequest
     {

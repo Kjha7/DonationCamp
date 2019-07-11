@@ -1,49 +1,39 @@
 ﻿using System;
-using Donation.Configs;
-using Donation.Models.Entity;
-using Donation.Models.Request;
+using DonationCamp.Configs;
+using DonationCamp.Models.Entity;
+using DonationCamp.Models.Request;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace Donation.Services
+namespace DonationCamp.Services
 {
-    public class DonationServices : IDonationServices
+    public class DonationServices
     {
         public MongoDbConfig _donation;
-        public LoginConfig _loginconfig;
+        public IMongoCollection<Donation> dontaions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IMongoCollection<DonationCamp> dontaions;
-        public IMongoCollection<Credentials> credentials;
         public DonationServices(IOptions<MongoDbConfig> settings)
         {
             _donation = settings.Value;
             var client = new MongoClient(_donation.Uri);
             var database = client.GetDatabase(_donation.Database);
-
-            dontaions = database.GetCollection<DonationCamp>(_donation.Collection);
+            dontaions = database.GetCollection<Donation>(_donation.Collection);
         }
 
-        public DonationServices(IOptions<LoginConfig> settings)
-        {
-            _loginconfig = settings.Value;
-            var client = new MongoClient(_loginconfig.Uri);
-            var database = client.GetDatabase(_loginconfig.Database);
 
-            credentials = database.GetCollection<Credentials>(_loginconfig.Collection);
-        }
-
-        public DonationCamp donate(DonationCreateRequest donationCreateRequest)
+        public Donation Donate(DonationCreateRequest donationCreateRequest, string personId)
         {
-            var donar = new DonationCamp(donationCreateRequest);
+            var donar = new Donation(donationCreateRequest, personId);
             dontaions.InsertOneAsync(donar).Wait();
-
             return donar;
         }
 
-        public string login(Credentials credentials)
-        {
-            return "fd";
-        }
+        
+
     }
 }

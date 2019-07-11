@@ -1,11 +1,12 @@
 ﻿using System;
-using Donation.Models.Entity;
+using DonationCamp.Models.Entity;
+using DonationCamp.Models.Response;
 
-namespace Donation.Models.Request
+namespace DonationCamp.Models.Request
 {
     public class DonationCreateRequest
     {
         public Types Category { get; set; }
-        public DateTime dateTime { get; set; }
+        public int? Amt { get; set; }
     }
 }

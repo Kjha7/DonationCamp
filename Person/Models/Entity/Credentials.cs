@@ -13,8 +13,6 @@ namespace PersonDocument.Models.Entity
             Password = credentialsCreateRequest.Password;
         }
         public Credentials() { }
-
-
         public Guid PersonId { get; set; }
         public string EmailId { get; set; }
         public string Password { get; set; }

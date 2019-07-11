@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationCamp", "DonationCamp\DonationCamp.csproj", "{331584D8-6289-46DC-AC45-1809BA5508C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Person", "Person\Person.csproj", "{9783E504-5FEC-439E-B771-C3B85C2438AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonDocument", "Person\PersonDocument.csproj", "{9783E504-5FEC-439E-B771-C3B85C2438AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

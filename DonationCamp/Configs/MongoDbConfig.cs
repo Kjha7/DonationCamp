@@ -1,7 +1,7 @@
 ﻿using System;
-using Donation.Models.Request;
+using DonationCamp.Models.Request;
 
-namespace Donation.Configs
+namespace DonationCamp.Configs
 {
     public class MongoDbConfig
     {

@@ -10,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Donation.Configs;
+using DonationCamp.Configs;
+using DonationCamp.Services;
+using Microsoft.AspNetCore.Http;
 
-namespace Donation
+namespace DonationCamp
 
 {
     public class Startup
@@ -29,7 +31,15 @@ namespace Donation
         {
             services.Configure<MongoDbConfig>(Configuration.GetSection(nameof(MongoDbConfig)));
             services.Configure<LoginConfig>(Configuration.GetSection(nameof(LoginConfig)));
+            services.AddSingleton<DonationServices>();
+            services.AddSingleton<SessionServices>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);//You can set Time
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +56,7 @@ namespace Donation
             }
 
             app.UseHttpsRedirection();
+            app.UseSession();
             app.UseMvc();
         }
     }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -17,9 +17,7 @@
     <Folder Include="Services\" />
     <Folder Include="Models\Entity\" />
     <Folder Include="Models\Request\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Person\Person.csproj" />
+    <Folder Include="Models\Response\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Models\Entity\Donar.cs" />

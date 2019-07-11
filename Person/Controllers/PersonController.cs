@@ -16,9 +16,9 @@ namespace PersonDocument.Controllers
 
         private IPersonService personServices;
         private CredentialService credentialService;
-        public PersonController(PersonServices _personService, CredentialService _credentialService)
+        public PersonController(PersonServices _personServices, CredentialService _credentialService)
         {
-            personServices = _personService;
+            personServices = _personServices;
             credentialService = _credentialService;
         }
 
