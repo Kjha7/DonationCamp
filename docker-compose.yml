@@ -1,0 +1,31 @@
+﻿version: '3.4'
+
+services:
+  donationcamp:
+    image: ${DOCKER_REGISTRY-}donationcamp
+    build:
+      context: .
+      dockerfile: DonationCamp/Dockerfile
+
+  persondocument:
+    image: ${DOCKER_REGISTRY-}persondocument
+    build:
+      context: .
+      dockerfile: Person/Dockerfile
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      - MONGOID_ENV=test
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - MONGOID_ENV=test
+    depends_on:
+      - mongo

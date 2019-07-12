@@ -15,7 +15,6 @@ namespace DonationCamp.Services
     {
         public MongoDbConfig _donation;
         public IMongoCollection<Donation> dontaions;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public DonationServices(IOptions<MongoDbConfig> settings)
         {

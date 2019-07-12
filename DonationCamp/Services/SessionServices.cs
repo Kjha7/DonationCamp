@@ -13,7 +13,6 @@ namespace DonationCamp.Services
     {
         private LoginConfig _config;
         public IMongoCollection<Credentials> credentials;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public SessionServices(IOptions<LoginConfig> settings, IHttpContextAccessor httpContextAccessor)
         {
             _config = settings.Value;

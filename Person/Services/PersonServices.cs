@@ -71,8 +71,8 @@ namespace PersonDocument.Services
             DateTime updatedAt = DateTime.UtcNow;
             return _person.FindOneAndUpdateAsync(p => p.PersonId == personId,
                  Person.UpdateBuilder(personUpdateRequest, updatedAt)).Result;
-            
-
         }
+
+
     }
 }
