@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PersonDocument.Configs;
 using PersonDocument.Services;
+using System.Net.Http;
 
 namespace PersonDocument
 {
@@ -32,6 +33,7 @@ namespace PersonDocument
             services.Configure<LoginConfig>(Configuration.GetSection(nameof(LoginConfig)));
             services.AddSingleton<PersonServices>();
             services.AddSingleton<CredentialService>();
+            services.AddHttpClient();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

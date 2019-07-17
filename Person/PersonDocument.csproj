@@ -16,4 +16,7 @@
   <ItemGroup>
     <Folder Include="Configs\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DonationCamp\DonationCamp.csproj" />
+  </ItemGroup>
 </Project>

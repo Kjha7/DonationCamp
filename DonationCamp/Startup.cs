@@ -33,7 +33,6 @@ namespace DonationCamp
             services.Configure<LoginConfig>(Configuration.GetSection(nameof(LoginConfig)));
             services.AddSingleton<DonationServices>();
             services.AddSingleton<SessionServices>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpContextAccessor();
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);//You can set Time

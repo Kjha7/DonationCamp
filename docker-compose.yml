@@ -20,12 +20,6 @@ services:
       - MONGOID_ENV=test
     ports:
       - 27017:27017
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      - MONGOID_ENV=test
-    depends_on:
-      - mongo
+    volumes:       - /usr/local/share/mongo:/data/db
+    
+ 

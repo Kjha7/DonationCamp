@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using DonationCamp.Services;
 using DonationCamp.Models.Request;
 using Microsoft.AspNetCore.Http;
+using DonationCamp.Models.Response;
+using DonationCamp.Models.Entity;
 
 namespace DonationCamp.Controllers
 {
@@ -45,6 +47,20 @@ namespace DonationCamp.Controllers
                 var personId = HttpContext.Session.GetString("personId");
                 donationServices.Donate(donationCreateRequest, personId);
             }
+        }
+
+        // GET api/person
+        [HttpGet]
+        [Route("api/Donate")]
+        public ActionResult<IEnumerable<Donation>> Get()
+        {
+            return donationServices.GetAllDonation();
+        }
+
+        [HttpGet("/r/donate/{id}")]
+        public ActionResult<string> GetTotalDonation(Guid id)
+        {
+            return donationServices.PersonTotalDonation(id.ToString());
         }
 
     }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using PersonDocument.Configs;
@@ -11,19 +13,21 @@ using PersonDocument.Models.Request;
 
 namespace PersonDocument.Services
 {
-    public class PersonServices :IPersonService
+    public class PersonServices : IPersonService
     {
         private MongoDbConfig _config;
 
         private IMongoCollection<Person> _person;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        public PersonServices(IOptions<MongoDbConfig> settings)
+        public PersonServices(IOptions<MongoDbConfig> settings, IHttpClientFactory _httpClientFactory)
         {
             _config = settings.Value;
             var client = new MongoClient(_config.Uri);
             var database = client.GetDatabase(_config.Database);
-
             _person = database.GetCollection<Person>(_config.Collection);
+
+            httpClientFactory = _httpClientFactory;
         }
 
         public List<Person> GetAllPersons()
@@ -50,7 +54,7 @@ namespace PersonDocument.Services
             {
                 _person.DeleteOneAsync(personId.ToString()).Wait();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -58,12 +62,20 @@ namespace PersonDocument.Services
 
         public Person CreatePerson(PersonCreateRequest personCreateRequest)
         {
-            var personDocument = new Person(personCreateRequest);
-            _person.InsertOneAsync(personDocument).Wait();
+            try
+            {
+                var personDocument = new Person(personCreateRequest);
+                _person.InsertOneAsync(personDocument).Wait();
 
-            var credentials = new Credentials();
+                var credentials = new Credentials();
 
-            return personDocument;
+                return personDocument;
+            }
+            catch
+            {
+                System.Console.WriteLine("Create person service failed");
+                throw;
+            }
         }
 
         public Person UpdatePerson(Guid personId, PersonUpdateRequest personUpdateRequest)
@@ -71,6 +83,29 @@ namespace PersonDocument.Services
             DateTime updatedAt = DateTime.UtcNow;
             return _person.FindOneAndUpdateAsync(p => p.PersonId == personId,
                  Person.UpdateBuilder(personUpdateRequest, updatedAt)).Result;
+        }
+
+        public async Task<string> TotalDonation(string id)
+        {
+            try
+            {
+                string url = "http://donationcamp/r/donate/" + id;
+                var request = new HttpRequestMessage();
+                request.RequestUri = new Uri(url);
+                var client = httpClientFactory.CreateClient();
+
+                //HttpClientHandler httpClientHandler = new HttpClientHandler();
+                //httpClientHandler.
+                var response = await client.SendAsync(request);
+                var content = await response.Content.ReadAsStringAsync();
+                return content;
+            }
+            catch
+            {
+                System.Console.WriteLine("Total Donation service failed");
+                throw;
+            }
+
         }
 
 

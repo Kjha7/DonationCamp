@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using DonationCamp.Models.Response;
+using DonationCamp.Services;
 using Microsoft.AspNetCore.Mvc;
 using PersonDocument.Models;
 using PersonDocument.Models.Entity;
 using PersonDocument.Models.Request;
 using PersonDocument.Services;
+using System.Threading.Tasks;
 
 namespace PersonDocument.Controllers
 {
@@ -16,6 +20,7 @@ namespace PersonDocument.Controllers
 
         private IPersonService personServices;
         private CredentialService credentialService;
+        private DonationServices donationServices;
         public PersonController(PersonServices _personServices, CredentialService _credentialService)
         {
             personServices = _personServices;
@@ -37,6 +42,14 @@ namespace PersonDocument.Controllers
             var person = personServices.GetPerson(id);
             if (person == null) return NotFound();
             return person;
+        }
+
+        // GET api/person/5
+        [HttpGet("donate/{id}")]
+        public ActionResult<string> GetTotalDonation(Guid id)
+        {
+            var task =  personServices.TotalDonation(id.ToString());
+            return task.Result;
         }
 
         // POST api/person
