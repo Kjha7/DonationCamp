@@ -20,7 +20,6 @@ namespace PersonDocument.Controllers
 
         private IPersonService personServices;
         private CredentialService credentialService;
-        private DonationServices donationServices;
         public PersonController(PersonServices _personServices, CredentialService _credentialService)
         {
             personServices = _personServices;

@@ -15,4 +15,7 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="prometheus.yml" />
+  </ItemGroup>
 </Project>

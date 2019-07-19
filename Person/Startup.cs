@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using PersonDocument.Configs;
 using PersonDocument.Services;
 using System.Net.Http;
+using Prometheus;
 
 namespace PersonDocument
 {

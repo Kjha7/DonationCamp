@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using DonationCamp.Configs;
 using DonationCamp.Services;
 using Microsoft.AspNetCore.Http;
+using Prometheus;
 
 namespace DonationCamp
 

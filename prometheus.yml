@@ -1,0 +1,29 @@
+﻿# prometheus.yml
+global:
+  scrape_interval: 5s
+  external_labels:
+    monitor: 'my-monitor'
+
+scrape_configs:
+  - job_name: 'donationcamp-app'
+    metrics_path: /metrics-text
+    static_configs:
+      - targets: ['donationcamp:80']
+
+  - job_name: 'persondocument-app' 
+    metrics_path: /metrics-text
+    static_configs: 
+      - targets: ['persondocument:80']
+
+  - job_name: 'docker-manager' 
+    scrape_interval: 15s
+    metrics_path: /metrics
+    static_configs: 
+      - targets: ['host.docker.internal:50501']
+
+  #- job_name: 'docker-worker' 
+   # scrape_interval: 15s
+    # metrics_path: /metrics
+    # static_configs: 
+     # - targets: ['host.docker.internal:50501']
+    

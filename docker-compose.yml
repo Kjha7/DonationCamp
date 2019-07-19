@@ -21,5 +21,12 @@ services:
     ports:
       - 27017:27017
     volumes:       - /usr/local/share/mongo:/data/db
+
+  prometheus:
+    image: prom/prometheus:v2.11.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090' 
     
  
