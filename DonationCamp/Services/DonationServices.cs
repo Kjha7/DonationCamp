@@ -5,11 +5,15 @@ using DonationCamp.Models.Entity;
 using DonationCamp.Models.Request;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Prometheus;
 
 namespace DonationCamp.Services
 {
     public class DonationServices
     {
+        private string host = Environment.MachineName;
+        private Counter SessionCounter = Metrics.CreateCounter("UserSessionStatus", "Count", "host", "status");
+        private Gauge SessionGauge = Metrics.CreateGauge("ActiveSessions", "Count", "host");
         public MongoDbConfig _donation;
         public IMongoCollection<Donation> donations;
 
@@ -27,6 +31,8 @@ namespace DonationCamp.Services
             {
                 var donar = new Donation(donationCreateRequest, personId);
                 donations.InsertOneAsync(donar).Wait();
+                SessionGauge.WithLabels(host).Inc();
+                SessionCounter.WithLabels(host, "donate").Inc();
                 return donar;
             }
             catch (Exception)

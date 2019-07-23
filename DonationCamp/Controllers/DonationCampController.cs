@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DonationCamp.Services;
 using DonationCamp.Models.Request;
 using Microsoft.AspNetCore.Http;
-using DonationCamp.Models.Response;
 using DonationCamp.Models.Entity;
 
 namespace DonationCamp.Controllers
@@ -27,7 +25,7 @@ namespace DonationCamp.Controllers
         // POST account/Login
         [HttpPost]
         [Route("account/Login")]
-        public void Login([FromBody]LoginRequest loginRequest)
+        public string Login([FromBody]LoginRequest loginRequest)
         {
             // Require the user to have a confirmed email before they can log on.
           var personID = sessionServices.Login(loginRequest);
@@ -36,6 +34,7 @@ namespace DonationCamp.Controllers
                 HttpContext.Session.SetString("personId", personID.ToString());
                 HttpContext.Session.SetString("emailId", loginRequest.emailId);
             }
+            return HttpContext.Session.Id;
         }
 
         [HttpPost]
@@ -45,7 +44,15 @@ namespace DonationCamp.Controllers
             if(HttpContext.Session.GetString("personId") != null)
             {
                 var personId = HttpContext.Session.GetString("personId");
-                donationServices.Donate(donationCreateRequest, personId);
+                try
+                {
+                    donationServices.Donate(donationCreateRequest, personId);
+                    
+                }
+                catch (Exception)
+                {
+                    System.Console.WriteLine("Wrong person ID. Please check again.");
+                }
             }
         }
 

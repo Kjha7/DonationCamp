@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PersonDocument.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PersonDocument.Configs;
 using PersonDocument.Services;
-using System.Net.Http;
 using Prometheus;
 
 namespace PersonDocument
@@ -41,6 +33,19 @@ namespace PersonDocument
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //app.UseMetricServer();
+            //app.UseHttpMetrics();
+            var counter = Metrics.CreateCounter("PathCounter_Donation", "Counts requests to endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
+            app.UseMetricServer();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

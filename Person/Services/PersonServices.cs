@@ -9,14 +9,17 @@ using PersonDocument.Configs;
 using PersonDocument.Models;
 using PersonDocument.Models.Entity;
 using PersonDocument.Models.Request;
+using Prometheus;
 
 
 namespace PersonDocument.Services
 {
     public class PersonServices : IPersonService
     {
+        private string host = Environment.MachineName;
+        private static readonly Counter UserCounter = Metrics.CreateCounter("useraccountstatus", "Count", "host", "status");
+        //private static readonly Gauge UserGauge = Metrics.CreateGauge("useraccounts", "Count", "host");
         private MongoDbConfig _config;
-
         private IMongoCollection<Person> _person;
         private readonly IHttpClientFactory httpClientFactory;
 
@@ -53,6 +56,9 @@ namespace PersonDocument.Services
             try
             {
                 _person.DeleteOneAsync(personId.ToString()).Wait();
+                //UserGauge.WithLabels(host).Dec();
+                UserCounter.WithLabels(host, "DeletedAccounts").Inc();
+
             }
             catch (Exception)
             {
@@ -68,7 +74,8 @@ namespace PersonDocument.Services
                 _person.InsertOneAsync(personDocument).Wait();
 
                 var credentials = new Credentials();
-
+                //UserGauge.WithLabels(host).Inc();
+                UserCounter.WithLabels(host, "createperson").Inc();
                 return personDocument;
             }
             catch

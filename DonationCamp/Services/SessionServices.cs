@@ -6,12 +6,16 @@ using System.Web;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Http;
+using Prometheus;
 
 namespace DonationCamp.Services
 {
     public class SessionServices
-    {
-        private LoginConfig _config;
+	{
+		private readonly string host = Environment.MachineName;
+		static readonly Counter UserSessionCounter = Metrics.CreateCounter("UserSessions", "Count", "host", "status");
+		static readonly Gauge UserSessionGauge = Metrics.CreateGauge("UserActiveSessions", "Count", "host");
+		private LoginConfig _config;
         public IMongoCollection<Credentials> credentials;
         public SessionServices(IOptions<LoginConfig> settings, IHttpContextAccessor httpContextAccessor)
         {
@@ -24,10 +28,13 @@ namespace DonationCamp.Services
         public Guid Login(LoginRequest loginRequest)
         {
             //var emailID = await credentials.Find(p => p.EmailId == loginRequest.emailId).SingleAsync().Result;
-        var donar = credentials.Find(p => p.EmailId == loginRequest.emailId && p.Password == loginRequest.password).FirstOrDefault();
+            var donar = credentials.Find(p => p.EmailId == loginRequest.emailId && p.Password == loginRequest.password).FirstOrDefault();
             if (donar != null)
-            {
-                return donar.PersonId;
+			{
+                UserSessionGauge.Inc();
+                UserSessionCounter.WithLabels(host, "Login").Inc();
+				return donar.PersonId;
+
             }
             return donar.PersonId;
         }

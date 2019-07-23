@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using DonationCamp.Models.Response;
-using DonationCamp.Services;
 using Microsoft.AspNetCore.Mvc;
 using PersonDocument.Models;
-using PersonDocument.Models.Entity;
 using PersonDocument.Models.Request;
 using PersonDocument.Services;
 using System.Threading.Tasks;
+
 
 namespace PersonDocument.Controllers
 {
@@ -17,7 +15,6 @@ namespace PersonDocument.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-
         private IPersonService personServices;
         private CredentialService credentialService;
         public PersonController(PersonServices _personServices, CredentialService _credentialService)

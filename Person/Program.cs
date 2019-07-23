@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using App.Metrics;
 using App.Metrics.AspNetCore;
 using App.Metrics.Formatters.Prometheus;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Prometheus;
 
 namespace PersonDocument
 {
@@ -23,22 +19,14 @@ namespace PersonDocument
 
         public static IWebHost BuildWebHost(string[] args)
         {
-            Metrics = AppMetrics.CreateDefaultBuilder()
-                    .OutputMetrics.AsPrometheusPlainText()
-                    .OutputMetrics.AsPrometheusProtobuf()
-                    .Build();
-
             return WebHost.CreateDefaultBuilder(args)
-                            .ConfigureMetrics(Metrics)
-                            .UseMetrics(
-                                options =>
-                                {
-                                    options.EndpointOptions = endpointsOptions =>
-                                    {
-                                        endpointsOptions.MetricsTextEndpointOutputFormatter = Metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
-                                        endpointsOptions.MetricsEndpointOutputFormatter = Metrics.OutputMetricsFormatters.OfType<MetricsPrometheusProtobufOutputFormatter>().First();
-                                    };
-                                })
+                            .Configure(app => app.UseMetricServer())
+                            //.UseMetrics(
+                            // options => {
+                            //     options.EndpointOptions = endpointsOptions => {
+                            //         endpointsOptions.MetricsEndpointOutputFormatter = new MetricsPrometheusTextOutputFormatter();
+                            //     };
+                            // })
                             .UseStartup<Startup>()
                             .Build();
         }
