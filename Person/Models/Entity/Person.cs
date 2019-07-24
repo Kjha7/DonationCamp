@@ -6,6 +6,8 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PersonDocument.Models
 {
@@ -41,7 +43,6 @@ namespace PersonDocument.Models
         public string Password { get; set; }
         public DateTime? GraduationDate { get; set; }
         [Required(ErrorMessage = "Fill EmailID")]
-        [EmailAddress]
         public string EmailId { get; set; }
         public Gender gender { get; set; }
         public DateTime? UpdatedAt { get; set; }

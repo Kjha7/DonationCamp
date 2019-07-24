@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using PersonDocument.Configs;
@@ -51,13 +52,14 @@ namespace PersonDocument.Services
             }
         }
 
-        public void DeletePerson(Guid personId)
+        public async Task<bool> DeletePersonAsync(Guid personId)
         {
             try
             {
-                _person.DeleteOneAsync(personId.ToString()).Wait();
+                DeleteResult actionResult = await _person.DeleteOneAsync(Builders<Person>.Filter.Eq("PersonId", personId));
                 //UserGauge.WithLabels(host).Dec();
                 UserCounter.WithLabels(host, "DeletedAccounts").Inc();
+                return actionResult.IsAcknowledged;
 
             }
             catch (Exception)
@@ -71,6 +73,7 @@ namespace PersonDocument.Services
             try
             {
                 var personDocument = new Person(personCreateRequest);
+                if (!IsUserAvailable(personDocument.EmailId)) { return null; }
                 _person.InsertOneAsync(personDocument).Wait();
 
                 var credentials = new Credentials();
@@ -115,6 +118,14 @@ namespace PersonDocument.Services
 
         }
 
+        //Check for dublicate email ID
+        public bool IsUserAvailable(string userEmailId)
+        {
+            var person = _person.Find(p => p.EmailId == userEmailId).FirstOrDefault();
+            if (person == null)
+                return true;
 
+            return false;
+        }
     }
 }

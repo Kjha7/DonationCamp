@@ -35,7 +35,7 @@ namespace PersonDocument
         {
             //app.UseMetricServer();
             //app.UseHttpMetrics();
-            var counter = Metrics.CreateCounter("PathCounter_Donation", "Counts requests to endpoints", new CounterConfiguration
+            var counter = Metrics.CreateCounter("PathCounter_Person", "Counts requests to endpoints", new CounterConfiguration
             {
                 LabelNames = new[] { "method", "endpoint" }
             });

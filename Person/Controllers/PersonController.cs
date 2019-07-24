@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * Number of user registered per day/week/month [counter]
+ * Process time per service [Histogram]
+ * Total users [gauge]
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -7,7 +14,8 @@ using PersonDocument.Models;
 using PersonDocument.Models.Request;
 using PersonDocument.Services;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
+using MongoDB.Bson;
 
 namespace PersonDocument.Controllers
 {
@@ -42,7 +50,7 @@ namespace PersonDocument.Controllers
 
         // GET api/person/5
         [HttpGet("donate/{id}")]
-        public ActionResult<string> GetTotalDonation(Guid id)
+        public ActionResult<string> GetPersonTotalDonation(Guid id)
         {
             var task =  personServices.TotalDonation(id.ToString());
             return task.Result;
@@ -50,12 +58,16 @@ namespace PersonDocument.Controllers
 
         // POST api/person
         [HttpPost]
-        public ActionResult<Person> Post([FromBody] PersonCreateRequest personCreateRequest)
+        public ActionResult<string> Post([FromBody] PersonCreateRequest personCreateRequest)
         {
             var person = personServices.CreatePerson(personCreateRequest);
+            if(person == null)
+            {
+                return "Email ID already exist. Please try different ID";
+            }
             var credentialCreateRequest = new CredentialsCreateRequest(person);
             credentialService.CreateCredentials(credentialCreateRequest);
-            return person;
+            return "User Created ID: " + person.PersonId.ToString();
         }
 
         // PUT api/person/5
@@ -67,10 +79,11 @@ namespace PersonDocument.Controllers
 
         // DELETE api/person/5
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public Task<bool> Delete(Guid id)
         {
-            personServices.DeletePerson(id);
-            credentialService.DeleteCredentials(id);
+            var response = personServices.DeletePersonAsync(id);
+            var response2 = credentialService.DeleteCredentialsAsync(id);
+            return response;
         }
     }
 }

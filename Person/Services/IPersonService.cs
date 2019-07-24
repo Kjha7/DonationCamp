@@ -14,11 +14,12 @@ namespace PersonDocument.Services
 
         Person GetPerson(Guid personId);
 
-        void DeletePerson(Guid personId);
+        Task<bool> DeletePersonAsync(Guid personId);
 
         Person CreatePerson(PersonCreateRequest personCreateRequest);
 
         Person UpdatePerson(Guid personId, PersonUpdateRequest personUpdateRequest);
         Task<string> TotalDonation(string v);
+        bool IsUserAvailable(string userEmailId);
     }
 }

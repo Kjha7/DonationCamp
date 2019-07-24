@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 using PersonDocument.Configs;
 using PersonDocument.Models.Entity;
 using PersonDocument.Models.Request;
@@ -27,9 +28,10 @@ namespace PersonDocument.Services
             _credentials.InsertOneAsync(cred).Wait();
         }
 
-        public void DeleteCredentials(Guid id)
+        public async Task<bool> DeleteCredentialsAsync(Guid id)
         {
-            _credentials.DeleteManyAsync(id.ToString()).Wait();
+            DeleteResult actionResult = await _credentials.DeleteOneAsync(Builders<Credentials>.Filter.Eq("PersonId", id));
+            return actionResult.IsAcknowledged;
         }
     }
 }

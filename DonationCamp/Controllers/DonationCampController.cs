@@ -71,7 +71,7 @@ namespace DonationCamp.Controllers
 
         [HttpPost]
         [Route("api/Donate")]
-        public void Donate([FromBody]DonationCreateRequest donationCreateRequest)
+        public string Donate([FromBody]DonationCreateRequest donationCreateRequest)
         {
             if(HttpContext.Session.GetString("personId") != null)
             {
@@ -79,6 +79,7 @@ namespace DonationCamp.Controllers
                 try
                 {
                     donationServices.Donate(donationCreateRequest, personId);
+                    return "Thank You :)";
                     
                 }
                 catch (Exception)
@@ -86,6 +87,7 @@ namespace DonationCamp.Controllers
                     System.Console.WriteLine("Wrong person ID. Please check again.");
                 }
             }
+            return "No user logged In. Please login first";
         }
 
         // GET api/person
