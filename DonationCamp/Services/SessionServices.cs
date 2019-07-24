@@ -28,16 +28,14 @@ namespace DonationCamp.Services
         public Guid Login(LoginRequest loginRequest)
         {
             //var emailID = await credentials.Find(p => p.EmailId == loginRequest.emailId).SingleAsync().Result;
-            var donar = credentials.Find(p => p.EmailId == loginRequest.emailId && p.Password == loginRequest.password).FirstOrDefault();
+            var donar = credentials.Find(p => p.EmailId == loginRequest.EmailId && p.Password == loginRequest.Password).FirstOrDefault();
             if (donar != null)
 			{
                 UserSessionGauge.Inc();
                 UserSessionCounter.WithLabels(host, "Login").Inc();
 				return donar.PersonId;
-
             }
             return donar.PersonId;
         }
-
     }
 }
