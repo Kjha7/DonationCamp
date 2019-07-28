@@ -35,13 +35,15 @@ namespace PersonDocument
         {
             //app.UseMetricServer();
             //app.UseHttpMetrics();
-            var counter = Metrics.CreateCounter("PathCounter_Person", "Counts requests to endpoints", new CounterConfiguration
+            var instance = Environment.MachineName;
+            string envir = "Dev";
+            var counter = Metrics.CreateCounter("Number_of_request_Services", "Counts requests to endpoints", new CounterConfiguration
             {
-                LabelNames = new[] { "method", "endpoint" }
+                LabelNames = new[] { "method", "endpoint" , "http_status", "instance", "env" }
             });
             app.Use((context, next) =>
             {
-                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                counter.WithLabels(context.Request.Method, context.Request.Path, context.Response.StatusCode.ToString(), instance, envir).Inc();
                 return next();
             });
             app.UseMetricServer();

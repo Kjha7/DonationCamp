@@ -1,5 +1,7 @@
 ﻿/*
+ * [http_method, http_url, http_status, instance, environment]
  * Process time per service [Histogram]
+ * Numbe of requests came in 
  * Number of user logged in per day/today/week [counter]
  * Each user logged in count per hr/today/day/week [counter]
  * Person Total donation per day/today [Gauge/Histogram]
@@ -17,6 +19,7 @@ using DonationCamp.Models.Request;
 using Microsoft.AspNetCore.Http;
 using DonationCamp.Models.Entity;
 using DonationCamp.Models.Response;
+using Prometheus;
 
 namespace DonationCamp.Controllers
 {
@@ -26,6 +29,14 @@ namespace DonationCamp.Controllers
     {
         public DonationServices donationServices;
         public SessionServices sessionServices;
+  
+        private static readonly Histogram LoginDuration
+                = Metrics.CreateHistogram("services_duration_seconds", "Histogram of services processing durations.",
+                    new HistogramConfiguration
+                    {
+                        LabelNames = new[] { "action" }
+                    });
+
         public DonationController(DonationServices donation, SessionServices _sessionServices)
         {
             donationServices = donation;
@@ -37,12 +48,17 @@ namespace DonationCamp.Controllers
         [Route("account/Login")]
         public ActionResult<SessionResponse> Login([FromBody]LoginRequest loginRequest)
         {
-            // Require the user to have a confirmed email before they can log on.
-          var personID = sessionServices.Login(loginRequest);
-            if (true)
+            Guid personID;
+            using (LoginDuration.WithLabels("Login").NewTimer())
             {
-                HttpContext.Session.SetString("personId", personID.ToString());
-                HttpContext.Session.SetString("emailId", loginRequest.EmailId);
+                 personID = sessionServices.Login(loginRequest);
+            // Require the user to have a confirmed email before they can log on.
+            
+                if (true)
+                {
+                    HttpContext.Session.SetString("personId", personID.ToString());
+                    HttpContext.Session.SetString("emailId", loginRequest.EmailId);
+                }
             }
             return new SessionResponse(HttpContext.Session.Id, personID);
         }
@@ -51,7 +67,7 @@ namespace DonationCamp.Controllers
         [Route("account/session")]
         public ActionResult<string> GetSessionInfo()
         {
-            return HttpContext.Session.Id;
+                return HttpContext.Session.Id;
         }
 
         //[HttpPost]
@@ -73,12 +89,14 @@ namespace DonationCamp.Controllers
         [Route("api/Donate")]
         public string Donate([FromBody]DonationCreateRequest donationCreateRequest)
         {
-            if(HttpContext.Session.GetString("personId") != null)
+            if (HttpContext.Session.GetString("personId") != null)
             {
                 var personId = HttpContext.Session.GetString("personId");
                 try
                 {
-                    donationServices.Donate(donationCreateRequest, personId);
+                    using(LoginDuration.WithLabels("Donate").NewTimer()) {
+                        donationServices.Donate(donationCreateRequest, personId);
+                    }
                     return "Thank You :)";
                     
                 }
@@ -96,10 +114,15 @@ namespace DonationCamp.Controllers
         public ActionResult<IEnumerable<Donation>> Get()
         {
             int TotalDonation = 0;
-            var Totaldonationlist = donationServices.GetAllDonation();
-            foreach (Donation d in Totaldonationlist)
+            ActionResult<IEnumerable<Donation>> Totaldonationlist = null;
+            using (LoginDuration.WithLabels("Get").NewTimer())
             {
-                TotalDonation = (int)(TotalDonation + d.Amt);
+                 Totaldonationlist = donationServices.GetAllDonation();
+                
+                foreach (Donation d in Totaldonationlist.Value)
+                {
+                    TotalDonation = (int)(TotalDonation + d.Amt);
+                }
             }
             return Totaldonationlist;
             //return donationServices.GetAllDonation();
@@ -108,7 +131,12 @@ namespace DonationCamp.Controllers
         [HttpGet("/r/donate/{id}")]
         public ActionResult<string> GetTotalDonation(Guid id)
         {
-            return donationServices.PersonTotalDonation(id.ToString());
+            ActionResult<string> personDonation = null;
+            using (LoginDuration.WithLabels("Get").NewTimer())
+            {
+                personDonation = donationServices.PersonTotalDonation(id.ToString());
+            }
+            return personDonation;
         }
 
     }

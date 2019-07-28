@@ -13,8 +13,8 @@ namespace DonationCamp.Services
     public class SessionServices
 	{
 		private readonly string host = Environment.MachineName;
-		static readonly Counter UserSessionCounter = Metrics.CreateCounter("UserSessions", "Count", "host", "status");
-		static readonly Gauge UserSessionGauge = Metrics.CreateGauge("UserActiveSessions", "Count", "host");
+		static readonly Counter UserSessionCounter = Metrics.CreateCounter("Users_Login", "Total users login Count", "emailID");
+		static readonly Gauge UserSessionGauge = Metrics.CreateGauge("Users_Login_Count", "Total active sessions", "emailID");
 		private LoginConfig _config;
         public IMongoCollection<Credentials> credentials;
         public SessionServices(IOptions<LoginConfig> settings, IHttpContextAccessor httpContextAccessor)
@@ -31,8 +31,8 @@ namespace DonationCamp.Services
             var donar = credentials.Find(p => p.EmailId == loginRequest.EmailId && p.Password == loginRequest.Password).FirstOrDefault();
             if (donar != null)
 			{
-                UserSessionGauge.Inc();
-                UserSessionCounter.WithLabels(host, "Login").Inc();
+                UserSessionGauge.WithLabels(donar.EmailId).Inc();
+                UserSessionCounter.WithLabels(donar.EmailId).Inc();
 				return donar.PersonId;
             }
             return donar.PersonId;

@@ -25,6 +25,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.11.1
     volumes:
+      - /usr/local/share/prometheus:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - '9090:9090' 

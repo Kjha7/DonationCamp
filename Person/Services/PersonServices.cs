@@ -18,8 +18,9 @@ namespace PersonDocument.Services
     public class PersonServices : IPersonService
     {
         private string host = Environment.MachineName;
-        private static readonly Counter UserCounter = Metrics.CreateCounter("useraccountstatus", "Count", "host", "status");
-        //private static readonly Gauge UserGauge = Metrics.CreateGauge("useraccounts", "Count", "host");
+        //private static readonly Counter UserCounter = Metrics.CreateCounter("useraccountstatus", "Count", "host", "status");
+        private static readonly Counter UserPostCounter = Metrics.CreateCounter("total_users_registered", "Total Count of Users registered");
+        private static readonly Gauge UserGauge = Metrics.CreateGauge("total_users_account", "Count of users account in system");
         private MongoDbConfig _config;
         private IMongoCollection<Person> _person;
         private readonly IHttpClientFactory httpClientFactory;
@@ -58,7 +59,7 @@ namespace PersonDocument.Services
             {
                 DeleteResult actionResult = await _person.DeleteOneAsync(Builders<Person>.Filter.Eq("PersonId", personId));
                 //UserGauge.WithLabels(host).Dec();
-                UserCounter.WithLabels(host, "DeletedAccounts").Inc();
+                UserGauge.Dec();
                 return actionResult.IsAcknowledged;
 
             }
@@ -78,7 +79,8 @@ namespace PersonDocument.Services
 
                 var credentials = new Credentials();
                 //UserGauge.WithLabels(host).Inc();
-                UserCounter.WithLabels(host, "createperson").Inc();
+                UserPostCounter.Inc();
+                UserGauge.Inc();
                 return personDocument;
             }
             catch

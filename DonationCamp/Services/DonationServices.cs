@@ -12,8 +12,9 @@ namespace DonationCamp.Services
     public class DonationServices
     {
         private string host = Environment.MachineName;
-        private Counter SessionCounter = Metrics.CreateCounter("UserSessionStatus", "Count", "host", "status");
-        private Gauge SessionGauge = Metrics.CreateGauge("ActiveSessions", "Count", "host");
+        private Counter DonationCounter = Metrics.CreateCounter("Person_donation_count", "Total times user donated", "User");
+        private Gauge DonationGauge = Metrics.CreateGauge("Person_Total_Donation", "Person total donation", "User");
+        private Gauge TotalDonationGauge = Metrics.CreateGauge("Total_Donation", "Total donation Count");
         public MongoDbConfig _donation;
         public IMongoCollection<Donation> donations;
 
@@ -29,11 +30,21 @@ namespace DonationCamp.Services
         {
             try
             {
-                var donar = new Donation(donationCreateRequest, personId);
-                donations.InsertOneAsync(donar).Wait();
-                SessionGauge.WithLabels(host).Inc();
-                SessionCounter.WithLabels(host, "donate").Inc();
-                return donar;
+                var donation = new Donation(donationCreateRequest, personId);
+                donations.InsertOneAsync(donation).Wait();
+                DonationCounter.WithLabels(personId).Inc();
+                double gaugeval = DonationGauge.WithLabels(personId).Value;
+                double totalDonation = 0;
+                IEnumerable<string[]> gaugelabels = DonationGauge.GetAllLabelValues();
+                foreach (var label in gaugelabels)
+                {
+                    totalDonation += DonationGauge.WithLabels(label).Value;
+                }
+                DonationGauge.WithLabels(personId).Set((double)donationCreateRequest.Amt + gaugeval);
+                TotalDonationGauge.Set(totalDonation + (double)donationCreateRequest.Amt);
+                // DonationCounter.WithLabels(host, "donate").Inc();
+                //
+                return donation;
             }
             catch (Exception)
             {
@@ -52,7 +63,6 @@ namespace DonationCamp.Services
                 {
                     totalDonation += (int)person.Amt;
                 }
-
                 return totalDonation.ToString();
             }
             catch (Exception)
@@ -64,7 +74,14 @@ namespace DonationCamp.Services
 
          public List<Donation> GetAllDonation()
         {
-            return donations.Find(Donation => true).ToList();
+            var TotalDonation = donations.Find(Donation => true).ToList();
+            int totalDonation = 0;
+            foreach (Donation person in TotalDonation)
+            {
+                totalDonation += (int)person.Amt;
+            }
+            TotalDonationGauge.Set(totalDonation);
+            return TotalDonation;
         }
     }
 }
